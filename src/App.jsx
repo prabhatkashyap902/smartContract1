@@ -23,6 +23,7 @@ function App() {
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [isStakeDialogOpen, setIsStakeDialogOpen] = useState({open:false,type:0});
 	const[showLoading,setShowLoading]=useState(false)
+	const[showLoading2, setShowLoading2]=useState(false)
 	const provider = usePublicClient();
 	const { data: walletClient  } = useWalletClient();
 
@@ -31,7 +32,9 @@ function App() {
 		setShowLoading(true)
 		if(type===0){
 			if(approval){
+				
 				if (stakeAmount.trim()!=='') {
+					setShowLoading2(true)
 					// Approve the SimpleStaking contract to spend tokens
 					  
 					  const gasPrice = await web3.eth.getGasPrice(); // Get current gas price
@@ -57,9 +60,11 @@ function App() {
 			
 					setIsStakeDialogOpen({type:0, open:false});
 					setShowLoading(false)
+					setShowLoading2(false)
 
 					
-				  } else {
+				  } 
+				  else {
 					// If the user cancels the approval, exit the function
 					console.log('Staking process canceled due to insufficient approval.');
 					setShowLoading(false)
@@ -83,7 +88,7 @@ function App() {
 						  const shouldApprove = confirm(
 							`You need to approve the staking contract to spend ${stakeAmount} tokens on your behalf. Do you want to proceed with the approval?`
 						  );
-					
+							if(!shouldApprove) { setIsStakeDialogOpen({type:0, open:false}); setShowLoading(false)}
 						  // If the user approves
 						  
 						} else {
@@ -162,7 +167,9 @@ function App() {
 
 				{isStakeDialogOpen.open&&<div className='z-[2] absolute backdrop-blur-md flex justify-center items-center w-full h-full'>
 					<Dailog isStakeDialogOpen={isStakeDialogOpen} setIsStakeDialogOpen={setIsStakeDialogOpen}  setStakeAmount={setStakeAmount}
-					 handleOnClick={handleOnClick} showLoading={showLoading} setShowLoading={setShowLoading}/>
+					 handleOnClick={handleOnClick} showLoading={showLoading} setShowLoading={setShowLoading}
+					 setShowLoading2={setShowLoading2} showLoading2={showLoading2}
+					 />
 				</div>}
 				<ToastContainer />
 				<div className='flex-col flex  w-full	lg:mx-[100px] relative  items-center h-full my-10'>

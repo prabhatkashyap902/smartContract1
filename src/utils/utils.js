@@ -1,5 +1,5 @@
-export const stakingContractAddress="0xc6e51a953884e4ab967f6fce3231289b0dac75f1"
-export const tokenContractAddress="0xc4401c4bdd07f6ab4173aa088ff68e0fcd16630b"
+export const stakingContractAddress="0x4Bb66B1ba45E0c680D2b7b757c503b077d7F6D24"
+export const tokenContractAddress="0xA6908bdF8b10813E42Be59BB730b14DF09D64293"
 
 export const initialUrlSepolia="https://sepolia.etherscan.io/address/"
 
