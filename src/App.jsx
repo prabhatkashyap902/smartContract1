@@ -22,11 +22,13 @@ function App() {
 	const [totalStackAndReward,setTotalStackAndReward]=useState({reward:0,stake:0})
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [isStakeDialogOpen, setIsStakeDialogOpen] = useState({open:false,type:0});
+	const[showLoading,setShowLoading]=useState(false)
 	const provider = usePublicClient();
 	const { data: walletClient  } = useWalletClient();
 
 	const handleOnClick=async (type,approval)=>{
 		console.log(stakeAmount,typeof stakeAmount)
+		setShowLoading(true)
 		if(type===0){
 			if(approval){
 				if (stakeAmount.trim()!=='') {
@@ -54,10 +56,14 @@ function App() {
 						notify();
 			
 					setIsStakeDialogOpen({type:0, open:false});
+					setShowLoading(false)
+
 					
 				  } else {
 					// If the user cancels the approval, exit the function
 					console.log('Staking process canceled due to insufficient approval.');
+					setShowLoading(false)
+
 					return;
 				  }
 			}
@@ -92,9 +98,12 @@ function App() {
 					
 						  setIsStakeDialogOpen({...isStakeDialogOpen, open:false});
 						  setStakeAmount(0);
+						  setShowLoading(false)
 						}
 					  } catch (error) {
 					  console.error('Error staking tokens:', error);
+					  setShowLoading(false)
+
 					}
 				  }
 			}
@@ -139,7 +148,7 @@ function App() {
 
 			
 		}
-	},[provider, walletClient,address])
+	},[provider, walletClient,address,showLoading])
 
 	
 
@@ -152,7 +161,8 @@ function App() {
 				{/* Add more components and functionality */}
 
 				{isStakeDialogOpen.open&&<div className='z-[2] absolute backdrop-blur-md flex justify-center items-center w-full h-full'>
-					<Dailog isStakeDialogOpen={isStakeDialogOpen} setIsStakeDialogOpen={setIsStakeDialogOpen}  setStakeAmount={setStakeAmount} handleOnClick={handleOnClick}/>
+					<Dailog isStakeDialogOpen={isStakeDialogOpen} setIsStakeDialogOpen={setIsStakeDialogOpen}  setStakeAmount={setStakeAmount}
+					 handleOnClick={handleOnClick} showLoading={showLoading} setShowLoading={setShowLoading}/>
 				</div>}
 				<ToastContainer />
 				<div className='flex-col flex  w-full	lg:mx-[100px] relative  items-center h-full my-10'>
@@ -164,12 +174,12 @@ function App() {
 					<div className='flex'>
 					<button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
 						<span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-						Total Staked  - {totalStackAndReward.stake.toString()}
+						Total Staked  - {totalStackAndReward?.stake?.toString()}
 						</span>
 					</button>
 					<button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
 						<span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-						Reward - {totalStackAndReward.reward.toString()}
+						Reward - {totalStackAndReward?.reward?.toString()}
 						</span>
 					</button>
 					</div>
@@ -179,15 +189,13 @@ function App() {
 	}
 	return (
 		<div
-			style={{
-				display: 'flex',
-				justifyContent: 'flex-end',
-				
-			}}
 			
+			className='flex flex-col text-white justify-center items-center w-full h-[100vh] bg-gradient-to-l from-slate-800 to-gray-600 '
 		>
-		 
+			
 			<ConnectButton />
+			<p className='py-5'>A new way to connect your wallet!</p>
+			
 		</div>
 	);
 }

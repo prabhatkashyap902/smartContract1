@@ -3,15 +3,15 @@ import { IoCloseSharp } from "react-icons/io5";
 import { TbLoader2 } from "react-icons/tb";
 
 
-const Dailog = ({setIsStakeDialogOpen,isStakeDialogOpen, setStakeAmount,handleOnClick }) => {
-	const[showLoading,setShowLoading]=useState(false)
+const Dailog = ({setIsStakeDialogOpen,isStakeDialogOpen, setStakeAmount,handleOnClick,showLoading,setShowLoading }) => {
+
   return (
 	<div className='bg-white py-5 px-5 text-black rounded-md shadow-xl '>
 		<div className='flex flex-col'>
 			
 			<div className='font-extrabold flex justify-between mb-2'>
 			{isStakeDialogOpen.type===1?<h1>Approve on behlf of yours!</h1>:<h1>Stack Money</h1>}
-			<div className="flex justify-end my-1 cursor-pointer" onClick={e=>setIsStakeDialogOpen({...isStakeDialogOpen, open:false})}>
+			<div className="flex justify-end my-1 cursor-pointer" onClick={e=>{setIsStakeDialogOpen({...isStakeDialogOpen, open:false}); setShowLoading(false);}}>
 				<IoCloseSharp />
 
 			</div>
@@ -28,8 +28,8 @@ const Dailog = ({setIsStakeDialogOpen,isStakeDialogOpen, setStakeAmount,handleOn
 					<button className='  rounded-md bg-red-500 w-full  px-4 py-2 my-1 mx-1' onClick={e=>setIsStakeDialogOpen({type:0, open:false})}>Cancel</button>
 				</>
 				:
-				<button className=' w-full text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'  
-					onClick={e=>{handleOnClick(0,false); setShowLoading(true)}}>SUBMIT</button>}
+				<button className={`${showLoading?' cursor-not-allowed focus:outline-none ':''} w-full text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2`}
+					onClick={e=>handleOnClick(0,false)}> {showLoading?<div className='flex justify-center animate-spin	'><TbLoader2 /></div>:"SUBMIT"}</button>}
 					{showLoading&&<TbLoader2 />}
 			</div>
 		</div>
