@@ -1,0 +1,84 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "parser": "@babel/eslint-parser",
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:prettier/recommended"
+    ],
+    "plugins": [
+        "prettier",
+        "react",
+        "import",
+        "react-hooks"
+    ],
+    "rules": {
+        "curly": "error",
+        "complexity": ["warn", 100],
+        "max-depth": ["error", 4],
+        "max-len": ["warn", {
+            "code": 200,
+            "ignoreComments": true,
+            "ignorePattern": "className=\"[^\"]*\"|src=\"[^\"]*\""
+        }],
+        "max-params": ["error", 5],
+        "max-statements": ["error", 25],
+        "prettier/prettier": ["warn", {
+            "singleQuote": true,
+            "semi": false,
+            "tabWidth": 2,
+            "trailingComma": "all",
+            "arrowParens": "avoid",
+            "printWidth": 100
+        }],
+        "no-promise-executor-return": "error",
+        "prefer-const": "error",
+        "no-var": "error",
+        "react/prop-types": 0,
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "no-console": "off",
+        "no-unused-vars": ["warn", {
+            "vars": "all",
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "ignoreRestSiblings": false
+        }],
+        "import/order": ["error", {
+            "groups": [
+                ["builtin", "external"],
+                ["internal"],
+                ["parent", "sibling", "index"]
+            ],
+            "newlines-between": "always",
+            "alphabetize": {
+                "order": "asc",
+                "caseInsensitive": true
+            }
+        }]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        },
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx"]
+            }
+        }
+    },
+    "parserOptions": {
+        "babelOptions": {
+        "presets": [
+            "@babel/preset-env",
+        "@babel/preset-react"]
+     },
+        "requireConfigFile": false
+    }
+}
