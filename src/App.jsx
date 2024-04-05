@@ -11,6 +11,7 @@ import Dailog from './components/Dailog';
 import { stakingContractABI, stakingContractAddress, tokenContractABI, tokenContractAddress } from './utils/utils';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import WithdrawDialog from './components/WithdrawDialog';
 
 
 function App() {
@@ -24,6 +25,8 @@ function App() {
 	const [isStakeDialogOpen, setIsStakeDialogOpen] = useState({open:false,type:0});
 	const[showLoading,setShowLoading]=useState(false)
 	const[showLoading2, setShowLoading2]=useState(false)
+	const [showWithdrawDialog,setShowWithdrawDialog]=useState(false);
+	const[unstakeBalance,setUnstakeBalance] =useState('')
 	const provider = usePublicClient();
 	const { data: walletClient  } = useWalletClient();
 
@@ -147,7 +150,16 @@ function App() {
 				  console.error('Error fetching reward balance:', error);
 				}
 			  };
-		  
+			  const fetchUnstakedBalance = async () => {
+				try {
+				  const unstakedBalanceValue = await simpleStakingContractInstance.methods.getUnstakingDetails(address).call();
+				//   console.log(unstakedBalanceValue.amount)
+				  setUnstakeBalance(unstakedBalanceValue);
+				} catch (error) {
+				  console.error('Error fetching unstaked balance:', error);
+				}
+			  };
+			  fetchUnstakedBalance()
 			  fetchTotalStaked();
 			  fetchRewardBalance(address);
 
@@ -171,12 +183,24 @@ function App() {
 					 setShowLoading2={setShowLoading2} showLoading2={showLoading2}
 					 />
 				</div>}
+
+				{
+					showWithdrawDialog&&
+					<div className='z-[2] absolute backdrop-blur-md flex justify-center items-center w-full h-full'>
+				  
+						<WithdrawDialog totalStackAndReward={totalStackAndReward} unstakeBalance={unstakeBalance} 
+							setShowWithdrawDialog={setShowWithdrawDialog} simpleStakingContract={simpleStakingContract} address={address}/>
+					</div>
+				}
+
 				<ToastContainer />
 				<div className='flex-col flex  w-full	lg:mx-[100px] relative  items-center h-full my-10'>
 					<div><ConnectButton/></div>
 					<div className='flex flex-col lg:flex-row justify-between items-center w-full  my-10'>
-						<Card img={imgDeposit} text={"Stake Money"} isStakeDialogOpen={isStakeDialogOpen} setIsStakeDialogOpen={setIsStakeDialogOpen} type={0}/>
-						<Card img={imgWithdraw} text={"Withdraw Money"}  handleOnClick={handleOnClick}  type={1}/>
+						<Card img={imgDeposit} text={"Stake Money"} isStakeDialogOpen={isStakeDialogOpen} 
+								setIsStakeDialogOpen={setIsStakeDialogOpen} type={0}/>
+						<Card img={imgWithdraw} text={"Withdraw Money"}  showWithdrawDialog={showWithdrawDialog} 
+								setShowWithdrawDialog={setShowWithdrawDialog}  type={1}/>
 					</div>
 					<div className='flex'>
 					<button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
@@ -187,6 +211,11 @@ function App() {
 					<button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
 						<span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
 						Reward - {totalStackAndReward?.reward?.toString()}
+						</span>
+					</button>
+					<button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+						<span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+						unstaked - {unstakeBalance?.amount?.toString()}
 						</span>
 					</button>
 					</div>
